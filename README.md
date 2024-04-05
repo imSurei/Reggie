@@ -4,6 +4,8 @@ Reggie是為企業訂製的一款美食外送平台，包括 後端管理系統 
 管理系統提供給企業內部員工使用，可以對餐廳的菜品、套餐、訂單等進行管理維護；
 移動端提供給餐廳顧客使用，可以在線瀏覽菜品、添加購物車、結帳及瀏覽訂單等。
 
+本專案正在開發中。
+
 ## 使用技術
 * 數據層：MySQL、MyBatis、MyBatisPlus、Redis
 * 後端：Spring、SpringMVC、SpringBoot、Swagger、lombok
