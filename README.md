@@ -15,3 +15,11 @@ Reggie是為企業訂製的一款美食外送平台，包括 後端管理系統 
 ![image](https://raw.githubusercontent.com/imSurei/Reggie/master/pics/管理系統%20登陸頁面.png)
 
 ![image](https://raw.githubusercontent.com/imSurei/Reggie/master/pics/員工管理.png)
+
+![image](https://raw.githubusercontent.com/imSurei/Reggie/master/pics/菜品分類管理.png)
+
+![image](https://raw.githubusercontent.com/imSurei/Reggie/master/pics/菜品管理.png)
+
+![image](https://raw.githubusercontent.com/imSurei/Reggie/master/pics/修改菜品.png)
+
+![image](https://raw.githubusercontent.com/imSurei/Reggie/master/pics/移動端選購頁面.png)
