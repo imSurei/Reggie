@@ -13,4 +13,13 @@ public interface SetmealService extends IService<Setmeal> {
 
     // 刪除套餐，同時刪除其關聯的菜品
     void removeWithDish(List<Long> ids);
+
+    // 單個或批量更新套餐停/启售状态
+    void updateStatus(int status, List<Long> ids);
+
+    // 根據ID查詢套餐信息和其對應的菜品信息
+    SetmealDto getByIdWithDishes(Long id);
+
+    // 修改套餐
+    void updateWithDishes(SetmealDto setmealDto);
 }

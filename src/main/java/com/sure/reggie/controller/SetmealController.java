@@ -29,9 +29,6 @@ public class SetmealController {
     private SetmealService setmealService;
 
     @Autowired
-    private SetmealDishService setmealDishService;
-
-    @Autowired
     private CategoryService categoryService;
 
     /**
@@ -44,6 +41,30 @@ public class SetmealController {
     public Result<String> save(@RequestBody SetmealDto setmealDto) {
         setmealService.saveWithDish(setmealDto);
         return Result.success("新增套餐成功");
+    }
+
+    /**
+     * 根據ID查詢套餐信息和其對應的菜品信息
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("{id}")
+    public Result<SetmealDto> get(@PathVariable Long id) {
+        SetmealDto setmealDto = setmealService.getByIdWithDishes(id);
+        return Result.success(setmealDto);
+    }
+
+    /**
+     * 修改套餐
+     *
+     * @param setmealDto
+     * @return
+     */
+    @PutMapping
+    public Result<String> update(@RequestBody SetmealDto setmealDto) {
+        setmealService.updateWithDishes(setmealDto);
+        return Result.success("修改套餐成功");
     }
 
     /**
@@ -85,6 +106,19 @@ public class SetmealController {
     }
 
     /**
+     * 單個或批量更新套餐停/启售状态
+     *
+     * @param status
+     * @param ids
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    public Result<String> updateStatus(@PathVariable int status, @RequestParam List<Long> ids) {
+        setmealService.updateStatus(status, ids);
+        return Result.success("套餐状态更新成功");
+    }
+
+    /**
      * 單個或批量刪除套餐
      *
      * @param ids
@@ -112,5 +146,4 @@ public class SetmealController {
         List<Setmeal> list = setmealService.list(queryWrapper);
         return Result.success(list);
     }
-
 }

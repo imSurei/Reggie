@@ -62,7 +62,7 @@
     <dependency>
       <groupId>com.baomidou</groupId>
       <artifactId>mybatis-plus-boot-starter</artifactId>
-      <version>3.4.3</version>
+      <version>3.5.3</version>
     </dependency>
 
     <!--mybatis-plus 代码生成器依赖，和分页插件冲突，先注掉-->

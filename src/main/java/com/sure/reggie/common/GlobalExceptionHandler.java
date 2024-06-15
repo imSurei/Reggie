@@ -11,6 +11,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * 全局異常處理
+ * (@ControllerAdvice 使用AOP 將RestController和Controller類別的拋出異常攔截到)
  */
 @ControllerAdvice(annotations = {RestController.class, Controller.class})
 @ResponseBody
@@ -21,7 +22,7 @@ public class GlobalExceptionHandler {
     public Result<String> exceptionHandler(SQLIntegrityConstraintViolationException e) {
         if (e.getMessage().contains("Duplicate entry")) {
             String[] split = e.getMessage().split(" ");
-            return Result.error("用戶名 " + split[9] + " 已存在");
+            return Result.error("用戶名 " + split[2] + " 已存在");
         }
         return Result.error("出現異常...");
     }

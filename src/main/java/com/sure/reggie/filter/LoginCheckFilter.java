@@ -53,7 +53,7 @@ public class LoginCheckFilter implements Filter {
             BaseContext.setCurrentId(userId);
             filterChain.doFilter(request, response);
         } else { // 未登陸，通過輸出流方式向客戶端頁面響應數據
-            response.getWriter().write(JSON.toJSONString(Result.error("NOTLOGIN")));
+            response.getWriter().write(JSON.toJSONString(Result.error("NOT LOGIN")));
         }
     }
 

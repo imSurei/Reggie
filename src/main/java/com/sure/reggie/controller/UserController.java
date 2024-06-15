@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
@@ -62,11 +63,16 @@ public class UserController {
                 userService.save(user);
             }
             // filter 需要setAttribute
-            session.setAttribute("user",user.getId());
+            session.setAttribute("user", user.getId());
             return Result.success(user);
         }
         return Result.error("登陸失敗");
     }
 
+    @PostMapping("/loginout")
+    public Result<String> logout(HttpServletRequest request) {
+        request.getSession().removeAttribute("user");
+        return Result.success("退出成功");
+    }
 
 }

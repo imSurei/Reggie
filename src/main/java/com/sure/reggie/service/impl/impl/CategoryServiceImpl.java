@@ -30,14 +30,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     public void remove(Long id) {
         LambdaQueryWrapper<Dish> dishQueryWrapper = new LambdaQueryWrapper<>();
         dishQueryWrapper.eq(Dish::getCategoryId, id);
-        int dishCount = dishService.count(dishQueryWrapper);
+        int dishCount = (int) dishService.count(dishQueryWrapper);
         if (dishCount > 0) {
             throw new CustomException("該分類已關聯菜品，無法刪除");
         }
 
         LambdaQueryWrapper<Setmeal> setmealQueryWrapper = new LambdaQueryWrapper<>();
         setmealQueryWrapper.eq(Setmeal::getCategoryId, id);
-        int SetmealCount = setmealService.count(setmealQueryWrapper);
+        int SetmealCount = (int) setmealService.count(setmealQueryWrapper);
         if (SetmealCount > 0) {
             throw new CustomException("該分類已關聯菜品，無法刪除");
         }

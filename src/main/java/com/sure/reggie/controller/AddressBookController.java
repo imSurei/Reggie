@@ -39,7 +39,6 @@ public class AddressBookController {
      */
     @PutMapping("default")
     public Result<AddressBook> setDefault(@RequestBody AddressBook addressBook) {
-        log.info("addressBook:{}", addressBook);
         LambdaUpdateWrapper<AddressBook> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(AddressBook::getUserId, BaseContext.getCurrentId());
         wrapper.set(AddressBook::getIsDefault, 0);
@@ -50,6 +49,16 @@ public class AddressBookController {
         // SQL:update address_book set is_default = 1 where id = ?
         addressBookService.updateById(addressBook);
         return Result.success(addressBook);
+    }
+
+    /**
+     * 編輯地址信息
+     */
+    @PutMapping
+    public Result<String> update(@RequestBody AddressBook addressBook) {
+        log.info("addressBook:{}", addressBook);
+        addressBookService.updateById(addressBook);
+        return Result.success("編輯成功");
     }
 
     /**
@@ -99,5 +108,17 @@ public class AddressBookController {
 
         // SQL:select * from address_book where user_id = ? order by update_time desc
         return Result.success(addressBookService.list(queryWrapper));
+    }
+
+    /**
+     * 刪除地址
+     *
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    public Result<String> delete(@RequestParam List<Long> ids) {
+        addressBookService.removeByIds(ids);
+        return Result.success("刪除地址成功");
     }
 }

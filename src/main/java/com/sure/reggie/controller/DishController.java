@@ -161,4 +161,29 @@ public class DishController {
 
         return Result.success(dishDtoList);
     }
+
+    /**
+     * 單個或批量更新菜品停/启售状态
+     *
+     * @param status
+     * @param ids
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    public Result<String> updateStatus(@PathVariable int status, @RequestParam List<Long> ids) {
+        dishService.updateStatusWithSetmeal(status, ids);
+        return Result.success("狀態更新成功");
+    }
+
+    /**
+     * 根據菜品停售狀態，刪除菜品
+     *
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    public Result<String> deleteById(@RequestParam List<Long> ids) {
+        dishService.deleteByIds(ids);
+        return Result.success("刪除成功");
+    }
 }
