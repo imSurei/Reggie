@@ -13,9 +13,11 @@ import com.sure.reggie.service.impl.DishService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +33,8 @@ public class DishController {
     private DishFlavorService dishFlavorService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 新增菜品
@@ -41,6 +45,9 @@ public class DishController {
     @PostMapping
     public Result<String> save(@RequestBody DishDto dishDto) {
         dishService.saveWithFlavor(dishDto);
+        // 清理redis緩存
+        String key = "dish_" + dishDto.getCategoryId() + "_" + dishDto.getStatus();
+        redisTemplate.delete(key);
         return Result.success("新增菜品成功");
     }
 
@@ -105,6 +112,9 @@ public class DishController {
     @PutMapping
     public Result<String> update(@RequestBody DishDto dishDto) {
         dishService.updateWithFlavor(dishDto);
+        //  清理redis緩存
+        String key = "dish_" + dishDto.getCategoryId() + "_" + dishDto.getStatus();
+        redisTemplate.delete(key);
         return Result.success("修改菜品成功");
     }
 
@@ -132,6 +142,17 @@ public class DishController {
      */
     @GetMapping("/list")
     public Result<List<DishDto>> list(Dish dish) {
+        // 從Redis中獲取緩存數據，根據菜品的categoryId不同動態構造key
+        List<DishDto> dishDtoList = null;
+        String key = "dish_" + dish.getCategoryId() + "_" + dish.getStatus();
+        dishDtoList = (List<DishDto>) redisTemplate.opsForValue().get(key);
+
+        // Redis獲取成功，直接返回
+        if (dishDtoList != null) {
+            return Result.success(dishDtoList);
+        }
+
+        // Redis獲取不成功，則需查詢db
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
         // 只查詢status=1 正在販賣的菜品
@@ -139,7 +160,7 @@ public class DishController {
         queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
 
         List<Dish> list = dishService.list(queryWrapper);
-        List<DishDto> dishDtoList = list.stream().map(item -> {
+        dishDtoList = list.stream().map(item -> {
             DishDto dishDto = new DishDto();
             BeanUtils.copyProperties(item, dishDto);
 
@@ -159,6 +180,8 @@ public class DishController {
             return dishDto;
         }).collect(Collectors.toList());
 
+        // 並將查詢到的data 緩存進Redis
+        redisTemplate.opsForValue().set(key, dishDtoList, 60, TimeUnit.MINUTES);
         return Result.success(dishDtoList);
     }
 
